@@ -1,78 +1,74 @@
-const MOCK_DATA = {
-  stocks: [
-    { symbol: 'AAPL', price: 175.34, change: 1.23, changePercent: 0.71 },
-    { symbol: 'GOOGL', price: 141.80, change: 2.45, changePercent: 1.76 },
-    { symbol: 'MSFT', price: 378.91, change: -1.23, changePercent: -0.32 },
-    { symbol: 'AMZN', price: 145.80, change: 3.12, changePercent: 2.19 },
-    { symbol: 'TSLA', price: 245.60, change: -5.67, changePercent: -2.26 },
-  ],
-  exchangeRates: {
-    USD: 1.0000,
-    EUR: 0.8500,
-    GBP: 0.7300,
-    JPY: 110.5000,
-    CAD: 1.2500,
-    AUD: 1.3500,
-    CHF: 0.9200,
-    CNY: 6.4500,
-  },
-  news: [
-    {
-      id: 1,
-      title: 'Tech Stocks Rally on AI Optimism',
-      source: 'Bloomberg',
-      timestamp: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      title: 'Federal Reserve Signals Rate Cuts',
-      source: 'Reuters',
-      timestamp: new Date().toISOString(),
-    },
-    {
-      id: 3,
-      title: 'Crypto Market Shows Resilience',
-      source: 'CoinDesk',
-      timestamp: new Date().toISOString(),
-    },
-    {
-      id: 4,
-      title: 'Green Energy Investments Surge',
-      source: 'CNBC',
-      timestamp: new Date().toISOString(),
-    },
-  ],
+const COIN_GECKO_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,cardano,dogecoin&order=market_cap_desc&per_page=5&page=1&sparkline=false&price_change_percentage=24h'
+const EXCHANGE_RATE_URL = 'https://open.er-api.com/v6/latest/USD'
+
+function transformMarketData(rawCoins) {
+  return rawCoins.map((coin) => ({
+    symbol: coin.symbol.toUpperCase(),
+    price: Number(coin.current_price) || 0,
+    change: Number(coin.price_change_24h) || 0,
+    changePercent: Number(coin.price_change_percentage_24h) || 0,
+    name: coin.name,
+  }))
 }
 
 export async function fetchStockData() {
   try {
-    return await new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_DATA.stocks), 500)
-    })
+    const response = await fetch(COIN_GECKO_URL)
+
+    if (!response.ok) {
+      throw new Error(`Market data request failed: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return transformMarketData(data)
   } catch (error) {
     console.error('Error fetching stock data:', error)
-    return MOCK_DATA.stocks
+    return []
   }
 }
 
 export async function fetchExchangeRates() {
   try {
-    return await new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_DATA.exchangeRates), 500)
-    })
+    const response = await fetch(EXCHANGE_RATE_URL)
+
+    if (!response.ok) {
+      throw new Error(`Exchange rate request failed: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data?.rates || {}
   } catch (error) {
     console.error('Error fetching exchange rates:', error)
-    return MOCK_DATA.exchangeRates
+    return {
+      USD: 1,
+      EUR: 0.92,
+      GBP: 0.79,
+      JPY: 157.1,
+      CAD: 1.36,
+    }
   }
 }
 
 export async function fetchFinancialNews() {
   try {
-    return await new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_DATA.news), 500)
-    })
+    const response = await fetch(COIN_GECKO_URL)
+
+    if (!response.ok) {
+      throw new Error(`Trending market request failed: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    return data.slice(0, 4).map((coin) => ({
+      id: coin.id,
+      title: `${coin.name} is showing ${coin.price_change_percentage_24h >= 0 ? 'positive' : 'negative'} momentum`,
+      source: 'CoinGecko',
+      timestamp: new Date().toISOString(),
+    }))
   } catch (error) {
     console.error('Error fetching news:', error)
-    return MOCK_DATA.news
+    return [
+      { id: 'fallback-1', title: 'Market data temporarily unavailable', source: 'System', timestamp: new Date().toISOString() },
+    ]
   }
 }

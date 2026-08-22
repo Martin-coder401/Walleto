@@ -12,12 +12,14 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <div className="logo">
-            <span className="logo-icon"></span>
-            <span className="logo-text">Walleto</span>
-            
+          <div className="logo-block">
+            <div className="logo">
+              <span className="logo-icon">💸</span>
+              <span className="logo-text">Walleto</span>
+            </div>
+            <span className="mini-badge">Finance + market insight</span>
           </div>
-          <div className="tagline">Genz manage your money </div>
+          <div className="tagline">Track spending. Watch trends. Grow smarter.</div>
         </div>
       </header>
 
@@ -26,19 +28,19 @@ function App() {
           className={`nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
           onClick={() => setActiveTab('dashboard')}
         >
-           Dashboard
+          Dashboard
         </button>
         <button
           className={`nav-btn ${activeTab === 'budget' ? 'active' : ''}`}
           onClick={() => setActiveTab('budget')}
         >
-           Budget Tracker
+          Budget Tracker
         </button>
         <button
           className={`nav-btn ${activeTab === 'tips' ? 'active' : ''}`}
           onClick={() => setActiveTab('tips')}
         >
-           Financial Tips
+          Financial Tips
         </button>
       </nav>
 
@@ -51,7 +53,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Walleto 2026 | don't waste your money  </p>
+        <p>Walleto 2026 | don’t waste your money</p>
       </footer>
     </div>
   )

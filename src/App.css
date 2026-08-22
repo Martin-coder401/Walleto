@@ -3,59 +3,79 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  color: #fff;
+  padding: 24px 20px 32px;
+  color: #f8fafc;
+  background:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.25), transparent 32%),
+    linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);
 }
 
 .app-header {
   width: 100%;
   max-width: 1200px;
-  padding: 15px 0;
+  padding: 8px 0 16px;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  padding: 20px 30px;
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(12px);
+  padding: 22px 30px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.28);
+}
+
+.logo-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .logo {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .logo-icon {
-  font-size: 2.2rem;
+  font-size: 2.3rem;
+  filter: drop-shadow(0 0 15px rgba(52, 211, 153, 0.4));
 }
 
 .logo-text {
   color: #fff;
+  letter-spacing: -0.04em;
 }
 
-.logo-highlight {
-  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.mini-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  color: #bfdbfe;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .tagline {
-  opacity: 0.7;
-  font-size: 0.95rem;
+  opacity: 0.82;
+  font-size: 1rem;
+  color: #dbeafe;
+  text-align: right;
 }
 
 .nav-bar {
   display: flex;
   gap: 12px;
-  padding: 15px 0;
+  padding: 16px 0;
   width: 100%;
   max-width: 1200px;
   flex-wrap: wrap;
@@ -63,45 +83,46 @@
 }
 
 .nav-btn {
-  padding: 12px 28px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 26px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 50px;
-  color: #fff;
+  color: #e2e8f0;
   cursor: pointer;
   font-size: 0.95rem;
-  transition: all 0.3s ease;
-  font-weight: 500;
+  transition: all 0.25s ease;
+  font-weight: 600;
 }
 
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(148, 163, 184, 0.12);
   transform: translateY(-2px);
 }
 
 .nav-btn.active {
-  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
   border-color: transparent;
-  box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.35);
 }
 
 .main-content {
   width: 100%;
   max-width: 1200px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.64);
+  backdrop-filter: blur(8px);
+  border-radius: 22px;
   padding: 30px;
-  margin: 20px 0;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 18px 0 10px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
   min-height: 500px;
   flex: 1;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.2);
 }
 
 .app-footer {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   text-align: center;
-  padding: 20px;
+  padding: 16px 0 0;
   font-size: 0.85rem;
 }
 
@@ -123,19 +144,24 @@
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;
-    gap: 10px;
-    padding: 15px;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 18px;
+  }
+
+  .tagline {
+    text-align: left;
   }
 
   .logo {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
 
   .nav-btn {
     padding: 10px 18px;
     font-size: 0.85rem;
     flex: 1;
-    min-width: 100px;
+    min-width: 110px;
     text-align: center;
   }
 
