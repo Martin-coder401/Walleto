@@ -47,23 +47,6 @@ Walleto includes:
 - JavaScript
 - CoinGecko API
 
-## 6. Requirement review against rubric
-
-### Functionality & Edge Cases
-- 25/25: The app works without runtime errors and includes loading states for API data.
-- The app handles empty results and failed fetches gracefully using fallback values.
-
-### User Interface
-- 25/25: The UI is intuitive, polished, and easy to navigate.
-- The design uses clear tabs, readable cards, and a modern dashboard layout suited to a Gen Z audience.
-
-### Code Quality
-- 25/25: The code is organized into reusable components, with separated data access and styling logic.
-- Naming is clear and the app structure is easy to follow.
-
-### Maintainability & Documentation
-- 25/25: The project includes a clear README and the app structure is easy to maintain.
-- Git history is consistent and the project is organized for future updates.
 
 ## 7. Getting started
 
