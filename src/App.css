@@ -71,6 +71,104 @@
   text-align: right;
 }
 
+.account-block {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.logout-btn, .switch-btn {
+  background: transparent;
+  border: 0;
+  color: var(--cyan);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-panel {
+  width: min(100%, 460px);
+  padding: 42px;
+  border: 1px solid var(--stroke);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.88);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.45);
+}
+
+.auth-panel .logo { margin-bottom: 18px; }
+.auth-layout { display: grid; grid-template-columns: minmax(150px, .8fr) minmax(0, 1.2fr); gap: 28px; align-items: center; }
+.auth-form-content { min-width: 0; }
+.eyebrow { color: var(--cyan); text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 800; }
+.auth-panel h1 { margin: 10px 0; font-size: 2.4rem; }
+.auth-copy { color: #cbd5e1; margin-bottom: 28px; line-height: 1.6; }
+.auth-panel form { display: grid; gap: 18px; }
+.auth-panel label { display: grid; gap: 7px; color: #cbd5e1; font-size: .9rem; font-weight: 700; }
+.auth-panel input { width: 100%; padding: 13px 14px; border: 1px solid var(--stroke); border-radius: 10px; background: rgba(255,255,255,.07); color: var(--text); }
+.primary-btn { padding: 14px; border: 0; border-radius: 10px; background: var(--cyan); color: #082f49; cursor: pointer; font-weight: 800; }
+.primary-btn:disabled { opacity: .65; cursor: wait; }
+.switch-btn { margin-top: 24px; font-size: .9rem; }
+.form-error { color: var(--red); font-size: .88rem; }
+
+.auth-character {
+  position: relative;
+  height: 280px;
+  margin: 0;
+  overflow: hidden;
+  color: #f8fafc;
+  border-right: 1px solid rgba(248, 250, 252, .12);
+}
+
+.character {
+  position: absolute;
+  left: 50%;
+  bottom: 45px;
+  width: 96px;
+  height: 112px;
+  transform: translateX(-50%);
+  animation: character-walk-in 1.2s cubic-bezier(.2, .8, .2, 1) both, character-bob .7s ease-in-out 1.2s infinite;
+}
+
+.character-head, .character-body, .briefcase, .arm, .leg { position: absolute; border: 3px solid #f8fafc; background: #0f172a; }
+.character-head { left: 27px; top: 2px; width: 48px; height: 48px; border-radius: 45% 45% 42% 42%; z-index: 2; }
+.character-body { left: 22px; top: 46px; width: 58px; height: 52px; border-radius: 20px 20px 8px 8px; }
+.shirt-mark { position: absolute; top: 12px; left: 20px; color: #f8fafc; font-weight: 900; font-style: normal; }
+.eye { position: absolute; top: 19px; width: 5px; height: 7px; border-radius: 50%; background: #f8fafc; transition: transform .25s ease; }
+.eye-left { left: 12px; }.eye-right { right: 12px; }
+.brow { position: absolute; top: 13px; width: 12px; height: 3px; background: #f8fafc; transition: transform .25s ease; }
+.brow-left { left: 8px; }.brow-right { right: 8px; }
+.mouth { position: absolute; left: 17px; bottom: 9px; width: 12px; height: 5px; border-bottom: 2px solid #f8fafc; border-radius: 50%; transition: all .25s ease; }
+.briefcase { left: -6px; top: 61px; width: 36px; height: 27px; border-radius: 4px; z-index: 3; transform: rotate(-7deg); animation: case-sway .7s ease-in-out 1.2s infinite alternate; transform-origin: top right; }
+.briefcase::before { content: ''; position: absolute; left: 10px; top: -9px; width: 11px; height: 9px; border: 3px solid #f8fafc; border-bottom: 0; border-radius: 5px 5px 0 0; }
+.briefcase span { position: absolute; top: 10px; left: 0; right: 0; border-top: 3px solid #f8fafc; }
+.arm { top: 53px; width: 12px; height: 45px; border-radius: 10px; transform-origin: top center; z-index: 1; }
+.arm-left { left: 15px; transform: rotate(28deg); animation: arm-swing .7s ease-in-out 1.2s infinite alternate; }.arm-right { right: 13px; transform: rotate(-68deg); }
+.leg { top: 91px; width: 13px; height: 22px; border-radius: 0 0 8px 8px; }.leg-left { left: 29px; transform: rotate(8deg); animation: leg-left .7s ease-in-out 1.2s infinite alternate; }.leg-right { right: 29px; transform: rotate(-8deg); animation: leg-right .7s ease-in-out 1.2s infinite alternate; }
+.character-shadow { position: absolute; bottom: 9px; left: 50%; width: 106px; height: 8px; transform: translateX(-50%); border-radius: 50%; background: rgba(0,0,0,.45); }
+.character-note { position: absolute; right: 16%; top: 32px; color: #f8fafc; font-size: .68rem; font-weight: 900; letter-spacing: .08em; transform: rotate(-8deg); opacity: 0; transition: opacity .25s ease; }
+.pointing .character-note, .angry .character-note { opacity: 1; }
+.pointing .arm-right { animation: point .8s ease-in-out infinite alternate; }
+.looking-away .eye-left { transform: translateX(-5px); }.looking-away .eye-right { transform: translateX(-5px); }
+.looking-away .character-head { transform: rotate(-9deg); }.looking-away .arm-right { transform: rotate(-30deg); }
+.angry .character-head { animation: shake .28s ease-in-out 2; }.angry .brow-left { transform: rotate(24deg) translateY(3px); }.angry .brow-right { transform: rotate(-24deg) translateY(3px); }.angry .mouth { height: 8px; border-top: 2px solid #f8fafc; border-bottom: 0; border-radius: 50%; }.angry .character-note { color: var(--red); }
+
+@keyframes character-walk-in { from { opacity: 0; transform: translate(-180%, 0); } 70% { opacity: 1; transform: translate(-42%, -2px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes character-bob { 50% { transform: translateX(-50%) translateY(-3px); } }
+@keyframes leg-left { to { transform: rotate(-12deg) translateY(2px); } }
+@keyframes leg-right { to { transform: rotate(12deg) translateY(-1px); } }
+@keyframes arm-swing { to { transform: rotate(42deg); } }
+@keyframes case-sway { to { transform: rotate(5deg); } }
+@keyframes point { from { transform: rotate(-61deg); } to { transform: rotate(-76deg); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+
+@media (prefers-reduced-motion: reduce) { .character, .briefcase, .arm-left, .leg-left, .leg-right, .pointing .arm-right, .angry .character-head { animation: none; } }
+
 .nav-bar {
   display: flex;
   gap: 12px;
@@ -153,6 +251,14 @@
   .tagline {
     text-align: left;
   }
+
+  .account-block { align-items: flex-start; }
+
+  .auth-panel { padding: 28px 22px; }
+
+  .auth-layout { display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+  .auth-character { height: 145px; border-right: 0; border-bottom: 1px solid rgba(248, 250, 252, .12); }
+  .character { bottom: 12px; }
 
   .logo {
     font-size: 1.8rem;

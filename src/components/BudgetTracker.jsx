@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import { apiRequest } from '../api/apiClient'
 import './styles/BudgetTracker.css'
 
 function BudgetTracker() {
@@ -12,29 +13,33 @@ function BudgetTracker() {
   ])
 
   const [newCategory, setNewCategory] = useState({ category: '', amount: '' })
+  const [serverReady, setServerReady] = useState(false)
+
+  useEffect(() => {
+    apiRequest('/budgets')
+      .then((items) => { setBudgets(items); setServerReady(true) })
+      .catch(() => setServerReady(false))
+  }, [setBudgets])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (newCategory.category && newCategory.amount) {
-      setBudgets([...budgets, {
-        id: Date.now(),
-        category: newCategory.category,
-        amount: parseFloat(newCategory.amount),
-        spent: 0,
-      }])
-      setNewCategory({ category: '', amount: '' })
+      const draft = { category: newCategory.category, amount: parseFloat(newCategory.amount), spent: 0 }
+      const save = serverReady ? apiRequest('/budgets', { method: 'POST', body: JSON.stringify(draft) }) : Promise.resolve({ ...draft, id: Date.now() })
+      save.then((budget) => { setBudgets((current) => [...current, budget]); setNewCategory({ category: '', amount: '' }) })
     }
   }
 
   const updateSpending = (id, spent) => {
-    setBudgets(budgets.map((budget) =>
-      budget.id === id ? { ...budget, spent: parseFloat(spent) || 0 } : budget
-    ))
+    const value = parseFloat(spent) || 0
+    setBudgets((current) => current.map((budget) => budget.id === id ? { ...budget, spent: value } : budget))
+    if (serverReady) apiRequest(`/budgets/${id}`, { method: 'PATCH', body: JSON.stringify({ spent: value }) }).catch(() => {})
   }
 
   const deleteCategory = (id) => {
     if (window.confirm('Delete this category?')) {
-      setBudgets(budgets.filter((budget) => budget.id !== id))
+      setBudgets((current) => current.filter((budget) => budget.id !== id))
+      if (serverReady) apiRequest(`/budgets/${id}`, { method: 'DELETE' }).catch(() => {})
     }
   }
 

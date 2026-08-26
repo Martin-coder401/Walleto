@@ -1,7 +1,11 @@
 # Walleto
 
-Walleto is a personal finance dashboard built with React to help users monitor their spending, manage a monthly budget, and stay aware of market trends in a clean, modern interface.
+Walleto is a full-stack personal finance workspace built with React and Flask. Authenticated users can manage private budgets and transactions while watching market trends in a clean, modern interface.
 https://walleto-opal.vercel.app/
+
+## Project brief
+
+Walleto helps people make a practical monthly money plan: create spending budgets, record transactions, compare actual spending with limits, and use market context as a learning aid. Every budget and transaction belongs to the signed-in user and is protected by the API.
 
 ## 1. External API used
 
@@ -45,8 +49,23 @@ Walleto includes:
 - React
 - Vite
 - JavaScript
+- Flask, Flask-SQLAlchemy, Flask-JWT-Extended, and PostgreSQL (SQLite is the local default)
 - CoinGecko API
 
+## 6. Authentication and API
+
+The Flask service exposes JWT authentication and ownership-scoped CRUD resources:
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| POST | `/api/auth/register` | Create an account |
+| POST | `/api/auth/login` | Return a JWT |
+| GET, POST | `/api/budgets` | List or create the current user's budgets |
+| PATCH, DELETE | `/api/budgets/:id` | Update or delete an owned budget |
+| GET, POST | `/api/transactions` | List or create the current user's transactions |
+| PATCH, DELETE | `/api/transactions/:id` | Update or delete an owned transaction |
+
+Protected requests require `Authorization: Bearer <token>`. Resource queries always filter by the authenticated user's ID, so an ID from another account cannot be edited or deleted.
 
 ## 7. Getting started
 
@@ -55,6 +74,18 @@ git clone https://github.com/Martin-coder401/Walleto.git
 cd Walleto
 npm install
 npm run dev
+```
+
+In a second terminal, start the API:
+
+```bash
+cd backend
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+export JWT_SECRET_KEY="use-a-long-random-value"
+# Set DATABASE_URL to a PostgreSQL URL for production; SQLite is used otherwise.
+python3 app.py
 ```
 
 ## 8. Available scripts

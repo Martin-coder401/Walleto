@@ -3,6 +3,22 @@
  */
 const CACHE_DURATION = 5 * 60 * 1000
 const cache = new Map()
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+export async function apiRequest(path, options = {}) {
+  const token = window.localStorage.getItem('walleto_token')
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  })
+  const data = response.status === 204 ? null : await response.json()
+  if (!response.ok) throw new Error(data?.error || `Request failed: ${response.status}`)
+  return data
+}
 
 export async function fetchWithCache(url, options = {}, cacheTime = CACHE_DURATION) {
   const cacheKey = `${url}-${JSON.stringify(options)}`
