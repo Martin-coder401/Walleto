@@ -3,6 +3,8 @@
 Walleto is a full-stack personal finance workspace built with React and Flask. Authenticated users can manage private budgets and transactions while watching market trends in a clean, modern interface.
 https://walleto-opal.vercel.app/
 
+The frontend uses `VITE_API_URL` for the deployed Flask API. The production deployment below uses Render for the backend and PostgreSQL; the existing Vercel frontend can remain as-is after setting that variable.
+
 ## Project brief
 
 Walleto helps people make a practical monthly money plan: create spending budgets, record transactions, compare actual spending with limits, and use market context as a learning aid. Every budget and transaction belongs to the signed-in user and is protected by the API.
@@ -104,7 +106,18 @@ npm run build
 
 This generates the dist folder for deployment.
 
-## 10. Project structure
+## 10. Deploy the API and connect the frontend
+
+This repository includes `render.yaml` for deploying the Flask API and a PostgreSQL database on Render:
+
+1. In Render, create a new Blueprint from this repository and apply `render.yaml`.
+2. After the `walleto-api` service is created, copy its public URL, such as `https://walleto-api.onrender.com`.
+3. In the Vercel project settings, add the production environment variable `VITE_API_URL` with the value `https://walleto-api.onrender.com/api`.
+4. Redeploy the Vercel frontend.
+
+`FRONTEND_ORIGIN` is already set in `render.yaml` to the current Vercel URL. Change it if the frontend uses a different production domain. The API health check is available at `/api/health`.
+
+## 11. Project structure
 
 ```text
 src/
@@ -128,11 +141,11 @@ src/
     useLocalStorage.js
 ```
 
-## 11. Presentation summary
+## 12. Presentation summary
 
 Walleto is a practical finance dashboard that combines personal budgeting with live market insights. It helps users make smarter money decisions by making their spending visible and connecting that information with current financial trends in an approachable, modern interface.
 
-## 12. License
+## 13. License
 
 This project is for educational and portfolio purposes.
 

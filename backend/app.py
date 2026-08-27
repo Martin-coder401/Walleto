@@ -9,13 +9,19 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///walleto.db')
+database_url = os.getenv('DATABASE_URL', 'sqlite:///walleto.db')
+if database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'change-this-in-production')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=8)
 db = SQLAlchemy(app)
 JWTManager(app)
-frontend_origins = os.getenv('FRONTEND_ORIGIN', 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174').split(',')
+frontend_origins = [origin.strip() for origin in os.getenv(
+    'FRONTEND_ORIGIN',
+    'http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174',
+).split(',') if origin.strip()]
 CORS(app, origins=frontend_origins)
 
 
@@ -167,4 +173,4 @@ with app.app_context():
 
 
 if __name__ == '__main__':
-    app.run(port=int(os.getenv('PORT', '5000')), debug=os.getenv('FLASK_DEBUG', '0') == '1')
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', '5000')), debug=os.getenv('FLASK_DEBUG', '0') == '1')
