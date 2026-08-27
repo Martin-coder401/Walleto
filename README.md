@@ -108,12 +108,15 @@ This generates the dist folder for deployment.
 
 ## 10. Deploy the API and connect the frontend
 
-This repository includes `render.yaml` for deploying the Flask API and a PostgreSQL database on Render:
+This repository includes `render.yaml` for deploying the Flask API on Render with a Supabase PostgreSQL database:
 
-1. In Render, create a new Blueprint from this repository and apply `render.yaml`.
-2. After the `walleto-api` service is created, copy its public URL, such as `https://walleto-api.onrender.com`.
-3. In the Vercel project settings, add the production environment variable `VITE_API_URL` with the value `https://walleto-api.onrender.com/api`.
-4. Redeploy the Vercel frontend.
+1. Create a free Supabase project and open **Connect**.
+2. Copy the **Session pooler** PostgreSQL connection string. Replace its password placeholder with your database password.
+3. In Render, create a new Blueprint from this repository and apply `render.yaml`.
+4. When prompted for `DATABASE_URL`, paste the Supabase connection string. Render will not create a separate database.
+5. After the `walleto-api` service is created, copy its public URL, such as `https://walleto-api.onrender.com`.
+6. In the Vercel project settings, add the production environment variable `VITE_API_URL` with the value `https://walleto-api.onrender.com/api`.
+7. Redeploy the Vercel frontend.
 
 `FRONTEND_ORIGIN` is already set in `render.yaml` to the current Vercel URL. Change it if the frontend uses a different production domain. The API health check is available at `/api/health`.
 
