@@ -1,13 +1,13 @@
 # Walleto
 
-Walleto is a full-stack personal finance workspace built with React and Flask. Authenticated users can manage private budgets and transactions while watching market trends in a clean, modern interface.
+Walleto is a full-stack personal finance workspace built with React and Flask. Users can open the app directly, manage budget categories, track spending, convert amounts to Kenyan shillings, and view live market information without logging in.
 https://walleto-opal.vercel.app/
 
-The frontend uses `VITE_API_URL` for the deployed Flask API. The production deployment below uses Render for the backend and PostgreSQL; the existing Vercel frontend can remain as-is after setting that variable.
+The frontend uses `VITE_API_URL` for the deployed Flask API. The production deployment uses Vercel for the frontend, Render for the Flask backend, and PostgreSQL for persistent budget data.
 
 ## Project brief
 
-Walleto helps people make a practical monthly money plan: create spending budgets, record transactions, compare actual spending with limits, and use market context as a learning aid. Every budget and transaction belongs to the signed-in user and is protected by the API.
+Walleto helps people make a practical monthly money plan: create spending budgets, compare actual spending with limits, convert totals between USD and KES, and use market context as a learning aid.
 
 ## 1. External API used
 
@@ -30,44 +30,42 @@ The app is designed to help a user:
 
 Walleto includes:
 
-- a financial dashboard with summary cards
-- budget tracking by category
-- spending vs. budget progress bars
-- quick financial tips and inspiration
-- a Gen Z-friendly style with neon gradients, glassmorphism, and modern card layouts
+- a financial dashboard with summary cards and live market data
+- budget tracking by category with spending-versus-limit progress bars
+- a warm gold money-inspired interface with a subtle banknote watermark
+- quick financial tips and money-management guidance
+- responsive navigation and layouts for desktop and mobile
 
 ## 4. Features
 
-- live market data from CoinGecko
-- budget tracker stored in local storage
-- add new spending categories
-- total budget, spent, remaining, and percentage tracking
-- responsive layout for desktop and mobile
-- financial tips section for better money habits
-- clickable exchange-rate panel with sorting options
+- live cryptocurrency market data from CoinGecko
+- live exchange rates with sortable rate cards
+- add new spending categories through an expandable form
+- total budget, total spent, remaining balance, and percentage-used summaries
+- explicit Update and Delete controls for budget spending values
+- USD and Kenyan shilling (KES) display conversion
+- backend persistence through the Flask API, with local storage fallback when the API is unavailable
+- loading, empty-response, failed-request, and reduced-motion handling
 
 ## 5. Tech stack
 
 - React
 - Vite
 - JavaScript
-- Flask, Flask-SQLAlchemy, Flask-JWT-Extended, and PostgreSQL (SQLite is the local default)
+- Flask, Flask-SQLAlchemy, and PostgreSQL (SQLite is the local default)
 - CoinGecko API
 
-## 6. Authentication and API
+## 6. API
 
-The Flask service exposes JWT authentication and ownership-scoped CRUD resources:
+The Flask service provides a health check and budget CRUD endpoints. The budget endpoints support direct app access and use a shared guest record for visitors:
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| POST | `/api/auth/register` | Create an account |
-| POST | `/api/auth/login` | Return a JWT |
-| GET, POST | `/api/budgets` | List or create the current user's budgets |
-| PATCH, DELETE | `/api/budgets/:id` | Update or delete an owned budget |
-| GET, POST | `/api/transactions` | List or create the current user's transactions |
-| PATCH, DELETE | `/api/transactions/:id` | Update or delete an owned transaction |
+| GET | `/api/health` | Confirm that the API is running |
+| GET, POST | `/api/budgets` | List or create budgets |
+| PATCH, DELETE | `/api/budgets/:id` | Update or delete a budget |
 
-Protected requests require `Authorization: Bearer <token>`. Resource queries always filter by the authenticated user's ID, so an ID from another account cannot be edited or deleted.
+Budget values are stored in USD. Currency conversion is a presentation feature in the frontend, using the exchange-rate service.
 
 ## 7. Getting started
 
@@ -85,8 +83,7 @@ cd backend
 python3 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
-export JWT_SECRET_KEY="use-a-long-random-value"
-# Set DATABASE_URL to a PostgreSQL URL for production; SQLite is used otherwise.
+
 python3 app.py
 ```
 
@@ -122,7 +119,17 @@ The variable must be present during the Vercel build because Vite embeds `VITE_*
 
 `FRONTEND_ORIGIN` is already set in `render.yaml` to the current Vercel URL. Change it if the frontend uses a different production domain. The API health check is available at `/api/health`.
 
-## 11. Project structure
+## 11. Quality and maintainability
+
+- Components are separated by responsibility: dashboard, budgeting, financial tips, loading, and error handling.
+- API helpers keep remote requests separate from presentation components.
+- `useFetch` handles loading and failed external requests; financial API helpers provide safe fallback values.
+- `useLocalStorage` keeps budget work available when the backend is temporarily unavailable.
+- The interface uses clear navigation, labeled actions, responsive layouts, and accessible form labels.
+- `npm run build` verifies that the production frontend compiles successfully.
+- The commit history documents incremental work across backend deployment, API integration, editing controls, currency conversion, visual design, and the browser favicon.
+
+## 12. Project structure
 
 ```text
 src/
@@ -146,7 +153,7 @@ src/
     useLocalStorage.js
 ```
 
-## 12. Presentation summary
+## 13. Presentation summary
 
 Walleto is a practical finance dashboard that combines personal budgeting with live market insights. It helps users make smarter money decisions by making their spending visible and connecting that information with current financial trends in an approachable, modern interface.
 
