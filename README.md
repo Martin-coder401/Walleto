@@ -118,6 +118,8 @@ This repository includes `render.yaml` for deploying the Flask API on Render wit
 6. In the Vercel project settings, add the production environment variable `VITE_API_URL` with the value `https://walleto-api.onrender.com/api`.
 7. Redeploy the Vercel frontend.
 
+The variable must be present during the Vercel build because Vite embeds `VITE_*` values into the frontend bundle. Do not include a trailing slash in the value. For local development, copy `.env.example` to `.env.local` and replace the placeholder with your local or deployed API URL.
+
 `FRONTEND_ORIGIN` is already set in `render.yaml` to the current Vercel URL. Change it if the frontend uses a different production domain. The API health check is available at `/api/health`.
 
 ## 11. Project structure

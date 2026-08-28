@@ -4,28 +4,9 @@ import Dashboard from './components/Dashboard'
 import BudgetTracker from './components/BudgetTracker'
 import FinancialTips from './components/FinancialTips'
 import ErrorBoundary from './components/ErrorBoundary'
-import AuthPanel from './components/AuthPanel'
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
-  const [user, setUser] = useState(() => {
-    const email = window.localStorage.getItem('walleto_email')
-    return email ? { email } : null
-  })
-
-  const handleAuth = (account) => {
-    window.localStorage.setItem('walleto_token', account.token)
-    window.localStorage.setItem('walleto_email', account.email)
-    setUser({ email: account.email })
-  }
-
-  const logout = () => {
-    window.localStorage.removeItem('walleto_token')
-    window.localStorage.removeItem('walleto_email')
-    setUser(null)
-  }
-
-  if (!user) return <AuthPanel onAuthenticated={handleAuth} />
 
   return (
     <div className="app">
@@ -40,7 +21,6 @@ function App() {
           </div>
           <div className="account-block">
             <span className="tagline">Track spending. Watch trends. Grow smarter.</span>
-            <button type="button" className="logout-btn" onClick={logout}>Sign out</button>
           </div>
         </div>
       </header>

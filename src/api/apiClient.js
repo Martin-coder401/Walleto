@@ -3,11 +3,19 @@
  */
 const CACHE_DURATION = 5 * 60 * 1000
 const cache = new Map()
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim()
+const API_URL = configuredApiUrl || 'http://localhost:5000/api'
+
+function getApiUrl() {
+  if (!configuredApiUrl && import.meta.env.PROD) {
+    throw new Error('The API is not configured. Set VITE_API_URL in the frontend deployment and redeploy.')
+  }
+  return API_URL
+}
 
 export async function apiRequest(path, options = {}) {
   const token = window.localStorage.getItem('walleto_token')
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(`${getApiUrl()}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
