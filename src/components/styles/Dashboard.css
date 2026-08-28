@@ -24,7 +24,7 @@
 }
 
 .summary-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(244, 201, 93, 0.13), rgba(91, 75, 28, 0.18));
   padding: 20px;
   border-radius: 12px;
   text-align: center;
@@ -47,11 +47,11 @@
 }
 
 .summary-card .value.positive {
-  color: #4caf50;
+  color: #b9cf70;
 }
 
 .summary-card .value.negative {
-  color: #ff6b6b;
+  color: #ef8b62;
 }
 
 .section {
@@ -61,7 +61,7 @@
 .section h3 {
   font-size: 1.3rem;
   margin-bottom: 15px;
-  color: #00d2ff;
+  color: #f4c95d;
 }
 
 .section-header {
@@ -82,11 +82,11 @@
 
 .rates-toggle,
 .sort-select {
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(245, 191, 66, 0.24);
   border-radius: 10px;
   padding: 9px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(46, 34, 13, 0.7);
+  color: #fff8e7;
   font-size: 0.9rem;
 }
 
@@ -96,7 +96,7 @@
 }
 
 .rates-toggle:hover {
-  border-color: rgba(0, 210, 255, 0.4);
+  border-color: rgba(244, 201, 93, 0.6);
 }
 
 .sort-select {
@@ -120,13 +120,13 @@
 
 .stock-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(0, 210, 255, 0.3);
+  border-color: rgba(244, 201, 93, 0.45);
 }
 
 .stock-symbol {
   font-weight: 700;
   font-size: 1.1rem;
-  color: #00d2ff;
+  color: #f4c95d;
 }
 
 .stock-price {
@@ -141,11 +141,11 @@
 }
 
 .stock-change.positive {
-  color: #4caf50;
+  color: #b9cf70;
 }
 
 .stock-change.negative {
-  color: #ff6b6b;
+  color: #ef8b62;
 }
 
 .rates-grid {
@@ -174,7 +174,7 @@
 
 .currency {
   font-weight: 600;
-  color: #00d2ff;
+  color: #f4c95d;
 }
 
 .rate {
@@ -192,7 +192,7 @@
   background: rgba(255, 255, 255, 0.05);
   padding: 15px 20px;
   border-radius: 10px;
-  border-left: 4px solid #00d2ff;
+  border-left: 4px solid #f4c95d;
   transition: transform 0.3s ease;
 }
 

@@ -15,11 +15,11 @@
 }
 
 .summary-card {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.1));
+  background: linear-gradient(135deg, rgba(244, 201, 93, 0.14), rgba(161, 112, 36, 0.16));
   padding: 20px;
   border-radius: 18px;
   text-align: center;
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  border: 1px solid rgba(245, 191, 66, 0.18);
   box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18);
 }
 
@@ -39,11 +39,11 @@
 }
 
 .currency-toggle {
-  border: 1px solid rgba(103, 232, 249, 0.35);
+  border: 1px solid rgba(244, 201, 93, 0.35);
   border-radius: 7px;
   padding: 4px 7px;
-  background: rgba(103, 232, 249, 0.12);
-  color: #c4f6ff;
+  background: rgba(244, 201, 93, 0.12);
+  color: #ffebad;
   font-size: 0.7rem;
   font-weight: 800;
   cursor: pointer;
@@ -134,7 +134,7 @@
 .progress-fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(135deg, #67e8f9, #3b82f6);
+  background: linear-gradient(135deg, #f8d46d, #c6812d);
 }
 
 .progress-fill.over {
@@ -170,7 +170,7 @@
 
 .update-btn,
 .cancel-btn {
-  border: 1px solid rgba(103, 232, 249, 0.35);
+  border: 1px solid rgba(244, 201, 93, 0.35);
   border-radius: 8px;
   padding: 7px 10px;
   cursor: pointer;
@@ -178,8 +178,8 @@
 }
 
 .update-btn {
-  background: rgba(103, 232, 249, 0.12);
-  color: #c4f6ff;
+  background: rgba(244, 201, 93, 0.12);
+  color: #ffebad;
 }
 
 .cancel-btn {
@@ -224,8 +224,8 @@
   padding: 12px 20px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #67e8f9, #8b5cf6);
-  color: #0f172a;
+  background: linear-gradient(135deg, #f8d46d, #c6812d);
+  color: #241807;
   font-weight: 800;
   cursor: pointer;
 }
