@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { apiRequest } from '../api/apiClient'
+import { fetchExchangeRates } from '../api/financialApi'
 import './styles/BudgetTracker.css'
 
 function BudgetTracker() {
@@ -17,12 +18,18 @@ function BudgetTracker() {
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingBudgetId, setEditingBudgetId] = useState(null)
   const [editedSpent, setEditedSpent] = useState('')
+  const [currency, setCurrency] = useState('USD')
+  const [exchangeRate, setExchangeRate] = useState(1)
 
   useEffect(() => {
     apiRequest('/budgets')
       .then((items) => { setBudgets(items); setServerReady(true) })
       .catch(() => setServerReady(false))
   }, [setBudgets])
+
+  useEffect(() => {
+    fetchExchangeRates().then((rates) => setExchangeRate(Number(rates.KES) || 1))
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -61,6 +68,7 @@ function BudgetTracker() {
   const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0)
   const remaining = totalBudget - totalSpent
   const usedPercentage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0
+  const formatMoney = (amount) => `${currency === 'KES' ? 'KSh' : '$'}${(amount * (currency === 'KES' ? exchangeRate : 1)).toFixed(2)}`
 
   return (
     <div className="budget-tracker fade-in">
@@ -70,18 +78,28 @@ function BudgetTracker() {
       <div className="budget-summary">
         <div className="summary-card">
           <h4> Total Budget</h4>
-          <p>${totalBudget.toFixed(2)}</p>
+          <p>{formatMoney(totalBudget)}</p>
         </div>
         <div className="summary-card">
           <h4> Total Spent</h4>
-          <p>${totalSpent.toFixed(2)}</p>
+          <p>{formatMoney(totalSpent)}</p>
         </div>
         <div className="summary-card">
           <h4> Amount remaining </h4>
-          <p className={remaining < 0 ? 'negative' : ''}>${remaining.toFixed(2)}</p>
+          <p className={remaining < 0 ? 'negative' : ''}>{formatMoney(remaining)}</p>
         </div>
         <div className="summary-card">
-          <h4> Money Used</h4>
+          <div className="summary-heading">
+            <h4> Money Used</h4>
+            <button
+              type="button"
+              className="currency-toggle"
+              onClick={() => setCurrency((current) => current === 'USD' ? 'KES' : 'USD')}
+              aria-label={`Switch currency to ${currency === 'USD' ? 'Kenyan shillings' : 'US dollars'}`}
+            >
+              {currency}
+            </button>
+          </div>
           <p>{usedPercentage.toFixed(0)}%</p>
         </div>
       </div>
@@ -111,10 +129,10 @@ function BudgetTracker() {
                     aria-label={`Spent for ${budget.category}`}
                   />
                 ) : (
-                  <span className="spent-value">${Number(budget.spent).toFixed(2)}</span>
+                  <span className="spent-value">{formatMoney(Number(budget.spent))}</span>
                 )}
                 <span className="separator">/</span>
-                <span className="amount">${Number(budget.amount).toFixed(2)}</span>
+                <span className="amount">{formatMoney(Number(budget.amount))}</span>
               </div>
               <div className="progress-wrapper">
                 <div className="progress-bar">
