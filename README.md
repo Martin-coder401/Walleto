@@ -95,31 +95,8 @@ npm run build
 npm run preview
 ```
 
-## 9. Production build
 
-```bash
-npm run build
-```
-
-This generates the dist folder for deployment.
-
-## 10. Deploy the API and connect the frontend
-
-This repository includes `render.yaml` for deploying the Flask API on Render with a Supabase PostgreSQL database:
-
-1. Create a free Supabase project and open **Connect**.
-2. Copy the **Session pooler** PostgreSQL connection string. Replace its password placeholder with your database password.
-3. In Render, create a new Blueprint from this repository and apply `render.yaml`.
-4. When prompted for `DATABASE_URL`, paste the Supabase connection string. Render will not create a separate database.
-5. After the `walleto-api` service is created, copy its public URL, such as `https://walleto-api.onrender.com`.
-6. In the Vercel project settings, add the production environment variable `VITE_API_URL` with the value `https://walleto-api.onrender.com/api`.
-7. Redeploy the Vercel frontend.
-
-The variable must be present during the Vercel build because Vite embeds `VITE_*` values into the frontend bundle. Do not include a trailing slash in the value. For local development, copy `.env.example` to `.env.local` and replace the placeholder with your local or deployed API URL.
-
-`FRONTEND_ORIGIN` is already set in `render.yaml` to the current Vercel URL. Change it if the frontend uses a different production domain. The API health check is available at `/api/health`.
-
-## 11. Quality and maintainability
+## 9. Quality and maintainability
 
 - Components are separated by responsibility: dashboard, budgeting, financial tips, loading, and error handling.
 - API helpers keep remote requests separate from presentation components.
@@ -129,7 +106,7 @@ The variable must be present during the Vercel build because Vite embeds `VITE_*
 - `npm run build` verifies that the production frontend compiles successfully.
 - The commit history documents incremental work across backend deployment, API integration, editing controls, currency conversion, visual design, and the browser favicon.
 
-## 12. Project structure
+## 10. Project structure
 
 ```text
 src/
@@ -153,11 +130,11 @@ src/
     useLocalStorage.js
 ```
 
-## 13. Presentation summary
+## 11. Presentation summary
 
 Walleto is a practical finance dashboard that combines personal budgeting with live market insights. It helps users make smarter money decisions by making their spending visible and connecting that information with current financial trends in an approachable, modern interface.
 
-## 13. License
+## 12. License
 
 This project is for educational and portfolio purposes.
 
