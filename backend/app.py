@@ -61,6 +61,15 @@ def current_user_id():
     return int(get_jwt_identity())
 
 
+def guest_user_id():
+    guest = User.query.filter_by(email='guest@walleto.local').first()
+    if not guest:
+        guest = User(email='guest@walleto.local', password_hash=generate_password_hash(os.urandom(32).hex()))
+        db.session.add(guest)
+        db.session.commit()
+    return guest.id
+
+
 @app.get('/api/health')
 def health():
     return jsonify({'status': 'ok'})
@@ -96,9 +105,9 @@ def login():
 
 
 @app.route('/api/budgets', methods=['GET', 'POST'])
-@jwt_required()
+@jwt_required(optional=True)
 def budgets():
-    user_id = current_user_id()
+    user_id = current_user_id() if get_jwt_identity() else guest_user_id()
     if request.method == 'GET':
         return jsonify([budget.as_dict() for budget in Budget.query.filter_by(user_id=user_id).order_by(Budget.id)])
     payload = request.get_json(silent=True) or {}
@@ -113,9 +122,10 @@ def budgets():
 
 
 @app.route('/api/budgets/<int:budget_id>', methods=['PATCH', 'DELETE'])
-@jwt_required()
+@jwt_required(optional=True)
 def budget_detail(budget_id):
-    budget = Budget.query.filter_by(id=budget_id, user_id=current_user_id()).first_or_404()
+    user_id = current_user_id() if get_jwt_identity() else guest_user_id()
+    budget = Budget.query.filter_by(id=budget_id, user_id=user_id).first_or_404()
     if request.method == 'DELETE':
         db.session.delete(budget)
     else:

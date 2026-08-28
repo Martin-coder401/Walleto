@@ -14,6 +14,9 @@ function BudgetTracker() {
 
   const [newCategory, setNewCategory] = useState({ category: '', amount: '' })
   const [serverReady, setServerReady] = useState(false)
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [editingBudgetId, setEditingBudgetId] = useState(null)
+  const [editedSpent, setEditedSpent] = useState('')
 
   useEffect(() => {
     apiRequest('/budgets')
@@ -30,10 +33,21 @@ function BudgetTracker() {
     }
   }
 
-  const updateSpending = (id, spent) => {
-    const value = parseFloat(spent) || 0
+  const startEditing = (budget) => {
+    setEditingBudgetId(budget.id)
+    setEditedSpent(String(budget.spent))
+  }
+
+  const cancelEditing = () => {
+    setEditingBudgetId(null)
+    setEditedSpent('')
+  }
+
+  const updateSpending = (id) => {
+    const value = parseFloat(editedSpent) || 0
     setBudgets((current) => current.map((budget) => budget.id === id ? { ...budget, spent: value } : budget))
     if (serverReady) apiRequest(`/budgets/${id}`, { method: 'PATCH', body: JSON.stringify({ spent: value }) }).catch(() => {})
+    cancelEditing()
   }
 
   const deleteCategory = (id) => {
@@ -86,16 +100,21 @@ function BudgetTracker() {
             <div key={budget.id} className="budget-item">
               <span className="category-name">{budget.category}</span>
               <div className="budget-amounts">
-                <input
-                  type="number"
-                  className="spent-input"
-                  value={budget.spent}
-                  onChange={(e) => updateSpending(budget.id, e.target.value)}
-                  min="0"
-                  step="1"
-                />
+                {editingBudgetId === budget.id ? (
+                  <input
+                    type="number"
+                    className="spent-input"
+                    value={editedSpent}
+                    onChange={(e) => setEditedSpent(e.target.value)}
+                    min="0"
+                    step="1"
+                    aria-label={`Spent for ${budget.category}`}
+                  />
+                ) : (
+                  <span className="spent-value">${Number(budget.spent).toFixed(2)}</span>
+                )}
                 <span className="separator">/</span>
-                <span className="amount">${budget.amount}</span>
+                <span className="amount">${Number(budget.amount).toFixed(2)}</span>
               </div>
               <div className="progress-wrapper">
                 <div className="progress-bar">
@@ -104,33 +123,51 @@ function BudgetTracker() {
                 </div>
                 <span className="progress-text">{Math.min(progress, 100).toFixed(0)}%</span>
               </div>
-              <button className="delete-btn" onClick={() => deleteCategory(budget.id)}>✕</button>
+              <div className="budget-actions">
+                {editingBudgetId === budget.id ? (
+                  <>
+                    <button type="button" className="update-btn" onClick={() => updateSpending(budget.id)}>Save Update</button>
+                    <button type="button" className="cancel-btn" onClick={cancelEditing}>Cancel</button>
+                  </>
+                ) : (
+                  <button type="button" className="update-btn" onClick={() => startEditing(budget)}>Update</button>
+                )}
+                <button type="button" className="delete-btn" onClick={() => deleteCategory(budget.id)}>Delete</button>
+              </div>
             </div>
           )
         })}
       </div>
 
       <div className="add-budget-section">
-        <h3>➕ Add New Category</h3>
-        <form onSubmit={handleSubmit} className="budget-form">
-          <input
-            type="text"
-            placeholder="Category name"
-            value={newCategory.category}
-            onChange={(e) => setNewCategory({ ...newCategory, category: e.target.value })}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Budget amount"
-            value={newCategory.amount}
-            onChange={(e) => setNewCategory({ ...newCategory, amount: e.target.value })}
-            required
-            min="0"
-            step="1"
-          />
-          <button type="submit">Add Category</button>
-        </form>
+        <button
+          type="button"
+          className="add-category-toggle"
+          onClick={() => setShowAddForm((current) => !current)}
+        >
+          {showAddForm ? 'Hide New Category' : 'Add New Category'}
+        </button>
+        {showAddForm && (
+          <form onSubmit={handleSubmit} className="budget-form">
+            <input
+              type="text"
+              placeholder="Category name"
+              value={newCategory.category}
+              onChange={(e) => setNewCategory({ ...newCategory, category: e.target.value })}
+              required
+            />
+            <input
+              type="number"
+              placeholder="Budget amount"
+              value={newCategory.amount}
+              onChange={(e) => setNewCategory({ ...newCategory, amount: e.target.value })}
+              required
+              min="0"
+              step="1"
+            />
+            <button type="submit">Add Category</button>
+          </form>
+        )}
       </div>
     </div>
   )
