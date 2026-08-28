@@ -141,9 +141,9 @@ def budget_detail(budget_id):
 
 
 @app.route('/api/transactions', methods=['GET', 'POST'])
-@jwt_required()
+@jwt_required(optional=True)
 def transactions():
-    user_id = current_user_id()
+    user_id = current_user_id() if get_jwt_identity() else guest_user_id()
     if request.method == 'GET':
         return jsonify([item.as_dict() for item in Transaction.query.filter_by(user_id=user_id).order_by(Transaction.occurred_on.desc())])
     payload = request.get_json(silent=True) or {}
@@ -160,9 +160,10 @@ def transactions():
 
 
 @app.route('/api/transactions/<int:transaction_id>', methods=['PATCH', 'DELETE'])
-@jwt_required()
+@jwt_required(optional=True)
 def transaction_detail(transaction_id):
-    transaction = Transaction.query.filter_by(id=transaction_id, user_id=current_user_id()).first_or_404()
+    user_id = current_user_id() if get_jwt_identity() else guest_user_id()
+    transaction = Transaction.query.filter_by(id=transaction_id, user_id=user_id).first_or_404()
     if request.method == 'DELETE':
         db.session.delete(transaction)
     else:
