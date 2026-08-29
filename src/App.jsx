@@ -13,8 +13,13 @@ function App() {
 
   const handleLogout = () => {
     window.localStorage.removeItem('walleto_token')
+    window.localStorage.removeItem('walleto_budgets')
+    window.localStorage.removeItem('walleto_transactions')
+    window.localStorage.removeItem('walleto_user')
+    // Reset state
     setAuthenticated(false)
     setUser(null)
+    setActiveTab('dashboard')
   }
 
   if (!authenticated) {

@@ -5,27 +5,42 @@ import { fetchExchangeRates } from '../api/financialApi'
 import './styles/BudgetTracker.css'
 
 function BudgetTracker() {
-  const [budgets, setBudgets] = useLocalStorage('walleto_budgets', [
-    { id: 1, category: 'Rent', amount: 900, spent: 900 },
-    { id: 2, category: 'Groceries', amount: 400, spent: 320 },
-    { id: 3, category: 'Transport', amount: 300, spent: 250 },
-    { id: 4, category: 'Entertainment', amount: 350, spent: 280 },
-    { id: 5, category: 'Savings', amount: 450, spent: 450 },
-  ])
-
+  const [budgets, setBudgets] = useLocalStorage('walleto_budgets', [])
+  const [transactions, setTransactions] = useState([])
   const [newCategory, setNewCategory] = useState({ category: '', amount: '' })
+  const [newTransaction, setNewTransaction] = useState({ description: '', category: '', amount: '' })
   const [serverReady, setServerReady] = useState(false)
   const [showAddForm, setShowAddForm] = useState(false)
+  const [showAddTransaction, setShowAddTransaction] = useState(false)
   const [editingBudgetId, setEditingBudgetId] = useState(null)
   const [editedSpent, setEditedSpent] = useState('')
   const [currency, setCurrency] = useState('USD')
   const [exchangeRate, setExchangeRate] = useState(1)
 
   useEffect(() => {
+    // Fetch user's budgets from server
     apiRequest('/budgets')
-      .then((items) => { setBudgets(items); setServerReady(true) })
-      .catch(() => setServerReady(false))
+      .then((items) => { 
+        setBudgets(items || [])
+        setServerReady(true) 
+      })
+      .catch(() => {
+        // If server fails, use empty list for authenticated users
+        setBudgets([])
+        setServerReady(false)
+      })
   }, [setBudgets])
+
+  useEffect(() => {
+    // Fetch user's transactions from server
+    apiRequest('/transactions')
+      .then((items) => { 
+        setTransactions(items || [])
+      })
+      .catch(() => {
+        setTransactions([])
+      })
+  }, [])
 
   useEffect(() => {
     fetchExchangeRates().then((rates) => setExchangeRate(Number(rates.KES) || 1))
@@ -61,6 +76,35 @@ function BudgetTracker() {
     if (window.confirm('Delete this category?')) {
       setBudgets((current) => current.filter((budget) => budget.id !== id))
       if (serverReady) apiRequest(`/budgets/${id}`, { method: 'DELETE' }).catch(() => {})
+    }
+  }
+
+  const handleAddTransaction = (e) => {
+    e.preventDefault()
+    if (newTransaction.description && newTransaction.category && newTransaction.amount) {
+      const draft = { 
+        description: newTransaction.description, 
+        category: newTransaction.category, 
+        amount: parseFloat(newTransaction.amount),
+        occurred_on: new Date().toISOString().split('T')[0]
+      }
+      apiRequest('/transactions', { method: 'POST', body: JSON.stringify(draft) })
+        .then((transaction) => {
+          setTransactions((current) => [transaction, ...current])
+          setNewTransaction({ description: '', category: '', amount: '' })
+          setShowAddTransaction(false)
+        })
+        .catch((err) => console.error('Failed to add transaction:', err))
+    }
+  }
+
+  const deleteTransaction = (id) => {
+    if (window.confirm('Delete this transaction?')) {
+      apiRequest(`/transactions/${id}`, { method: 'DELETE' })
+        .then(() => {
+          setTransactions((current) => current.filter((tx) => tx.id !== id))
+        })
+        .catch((err) => console.error('Failed to delete transaction:', err))
     }
   }
 
@@ -186,6 +230,79 @@ function BudgetTracker() {
             <button type="submit">Add Category</button>
           </form>
         )}
+      </div>
+
+      <div className="transactions-section">
+        <h3>Recent Transactions</h3>
+        <p className="subtitle">Your spending activity</p>
+        
+        <button
+          type="button"
+          className="add-category-toggle"
+          onClick={() => setShowAddTransaction((current) => !current)}
+        >
+          {showAddTransaction ? 'Hide New Transaction' : 'Add New Transaction'}
+        </button>
+
+        {showAddTransaction && (
+          <form onSubmit={handleAddTransaction} className="budget-form">
+            <input
+              type="text"
+              placeholder="Transaction description"
+              value={newTransaction.description}
+              onChange={(e) => setNewTransaction({ ...newTransaction, description: e.target.value })}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Category"
+              value={newTransaction.category}
+              onChange={(e) => setNewTransaction({ ...newTransaction, category: e.target.value })}
+              required
+            />
+            <input
+              type="number"
+              placeholder="Amount"
+              value={newTransaction.amount}
+              onChange={(e) => setNewTransaction({ ...newTransaction, amount: e.target.value })}
+              required
+              min="0"
+              step="0.01"
+            />
+            <button type="submit">Add Transaction</button>
+          </form>
+        )}
+
+        <div className="transactions-list">
+          {transactions.length === 0 ? (
+            <p className="empty-state">No transactions yet. Create one to get started!</p>
+          ) : (
+            <>
+              <div className="transactions-header">
+                <span>Description</span>
+                <span>Category</span>
+                <span>Amount</span>
+                <span>Date</span>
+                <span></span>
+              </div>
+              {transactions.map((transaction) => (
+                <div key={transaction.id} className="transaction-item">
+                  <span className="description">{transaction.description}</span>
+                  <span className="category">{transaction.category}</span>
+                  <span className="amount">{formatMoney(Number(transaction.amount))}</span>
+                  <span className="date">{new Date(transaction.occurred_on).toLocaleDateString()}</span>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => deleteTransaction(transaction.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
       </div>
     </div>
   )
