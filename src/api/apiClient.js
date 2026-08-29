@@ -29,7 +29,8 @@ export async function apiRequest(path, options = {}) {
 }
 
 export async function fetchWithCache(url, options = {}, cacheTime = CACHE_DURATION) {
-  const cacheKey = `${url}-${JSON.stringify(options)}`
+  const token = window.localStorage.getItem('walleto_token')
+  const cacheKey = `${url}-${token}-${JSON.stringify(options)}`
 
   if (cache.has(cacheKey)) {
     const { data, timestamp } = cache.get(cacheKey)

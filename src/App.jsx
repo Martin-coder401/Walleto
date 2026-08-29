@@ -5,6 +5,7 @@ import BudgetTracker from './components/BudgetTracker'
 import FinancialTips from './components/FinancialTips'
 import ErrorBoundary from './components/ErrorBoundary'
 import AuthPanel from './components/AuthPanel'
+import { clearCache } from './api/apiClient'
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -12,6 +13,8 @@ function App() {
   const [user, setUser] = useState(null)
 
   const handleLogout = () => {
+    // Clear API cache to prevent stale data from previous user
+    clearCache()
     window.localStorage.removeItem('walleto_token')
     window.localStorage.removeItem('walleto_budgets')
     window.localStorage.removeItem('walleto_transactions')
@@ -71,9 +74,9 @@ function App() {
 
       <main className="main-content">
         <ErrorBoundary>
-          {activeTab === 'dashboard' && <Dashboard />}
-          {activeTab === 'budget' && <BudgetTracker />}
-          {activeTab === 'tips' && <FinancialTips />}
+          {activeTab === 'dashboard' && <Dashboard key={user?.email} />}
+          {activeTab === 'budget' && <BudgetTracker key={user?.email} />}
+          {activeTab === 'tips' && <FinancialTips key={user?.email} />}
         </ErrorBoundary>
       </main>
 
