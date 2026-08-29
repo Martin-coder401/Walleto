@@ -9,9 +9,19 @@ import AuthPanel from './components/AuthPanel'
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [authenticated, setAuthenticated] = useState(false)
+  const [user, setUser] = useState(null)
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('walleto_token')
+    setAuthenticated(false)
+    setUser(null)
+  }
 
   if (!authenticated) {
-    return <AuthPanel onAuthenticated={() => setAuthenticated(true)} />
+    return <AuthPanel onAuthenticated={(account) => {
+      setUser(account)
+      setAuthenticated(true)
+    }} />
   }
 
   return (
@@ -27,6 +37,8 @@ function App() {
           </div>
           <div className="account-block">
             <span className="tagline">Track spending. Watch trends. Grow smarter.</span>
+            {user && <span className="user-email">{user.email}</span>}
+            <button className="logout-btn" onClick={handleLogout}>Log out</button>
           </div>
         </div>
       </header>

@@ -7,8 +7,9 @@ function AuthPanel({ onAuthenticated }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [passwordFocused, setPasswordFocused] = useState(false)
+  const [formFocused, setFormFocused] = useState(false)
 
-  const characterMood = error ? 'angry' : passwordFocused ? 'looking-away' : 'pointing'
+  const characterMood = error ? 'angry' : passwordFocused ? 'looking-away' : formFocused ? 'excited' : 'pointing'
 
   const submit = async (event) => {
     event.preventDefault()
@@ -24,10 +25,17 @@ function AuthPanel({ onAuthenticated }) {
     }
   }
 
+  const toggleMode = () => {
+    setMode(mode === 'login' ? 'register' : 'login')
+    setError('')
+    setPasswordFocused(false)
+    setForm({ email: '', password: '' })
+  }
+
   return (
     <main className="auth-shell">
       <section className="auth-panel">
-        <div className="logo"><span className="logo-icon">$</span><span className="logo-text">Walleto</span></div>
+        <div className="logo logo-animated"><span className="logo-icon">$</span><span className="logo-text">Walleto</span></div>
         <div className="auth-layout">
           <div className={`auth-character ${characterMood}`} aria-hidden="true">
             <div className="character-shadow" />
@@ -42,15 +50,38 @@ function AuthPanel({ onAuthenticated }) {
           </div>
           <div className="auth-form-content">
             <p className="eyebrow">Your money, in focus</p>
-            <h1>{mode === 'login' ? 'Welcome back.' : 'Make a little room.'}</h1>
+            <h1 className="form-title">{mode === 'login' ? 'Welcome back.' : 'Make a little room.'}</h1>
             <p className="auth-copy">Track budgets and everyday spending in one private workspace.</p>
-            <form onSubmit={submit}>
-              <label>Email<input type="email" value={form.email} onChange={(event) => { setForm({ ...form, email: event.target.value }); if (error) setError('') }} required /></label>
-              <label>Password<input type="password" minLength="8" value={form.password} onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} onChange={(event) => setForm({ ...form, password: event.target.value })} required /></label>
-              {error && <p className="form-error">{error}</p>}
-              <button className="primary-btn" disabled={loading}>{loading ? 'Working...' : mode === 'login' ? 'Log in' : 'Create account'}</button>
+            <form onSubmit={submit} onFocus={() => setFormFocused(true)} onBlur={() => setFormFocused(false)} className="auth-form">
+              <div className="input-group">
+                <label>Email</label>
+                <input 
+                  type="email" 
+                  value={form.email} 
+                  onChange={(event) => { setForm({ ...form, email: event.target.value }); if (error) setError('') }} 
+                  required 
+                  className="auth-input"
+                />
+              </div>
+              <div className="input-group">
+                <label>Password</label>
+                <input 
+                  type="password" 
+                  minLength="8" 
+                  value={form.password} 
+                  onFocus={() => setPasswordFocused(true)} 
+                  onBlur={() => setPasswordFocused(false)} 
+                  onChange={(event) => setForm({ ...form, password: event.target.value })} 
+                  required 
+                  className="auth-input"
+                />
+              </div>
+              {error && <p className="form-error error-animate">{error}</p>}
+              <button className="primary-btn btn-animate" disabled={loading}>
+                <span className="btn-text">{loading ? 'Working...' : mode === 'login' ? 'Log in' : 'Create account'}</span>
+              </button>
             </form>
-            <button type="button" className="switch-btn" onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setPasswordFocused(false) }}>
+            <button type="button" className="switch-btn" onClick={toggleMode}>
               {mode === 'login' ? 'New here? Create an account' : 'Already have an account? Log in'}
             </button>
           </div>
