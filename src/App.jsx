@@ -4,9 +4,15 @@ import Dashboard from './components/Dashboard'
 import BudgetTracker from './components/BudgetTracker'
 import FinancialTips from './components/FinancialTips'
 import ErrorBoundary from './components/ErrorBoundary'
+import AuthPanel from './components/AuthPanel'
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [authenticated, setAuthenticated] = useState(false)
+
+  if (!authenticated) {
+    return <AuthPanel onAuthenticated={() => setAuthenticated(true)} />
+  }
 
   return (
     <div className="app">
