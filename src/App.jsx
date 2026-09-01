@@ -3,6 +3,7 @@ import './App.css'
 import Dashboard from './components/Dashboard'
 import BudgetTracker from './components/BudgetTracker'
 import FinancialTips from './components/FinancialTips'
+import FinanceGuideBot from './components/FinanceGuideBot'
 import ErrorBoundary from './components/ErrorBoundary'
 import AuthPanel from './components/AuthPanel'
 import { clearCache } from './api/apiClient'
@@ -83,6 +84,8 @@ function App() {
       <footer className="app-footer">
         <p>Walleto 2026 | don’t waste your money</p>
       </footer>
+
+      <FinanceGuideBot />
     </div>
   )
 }
