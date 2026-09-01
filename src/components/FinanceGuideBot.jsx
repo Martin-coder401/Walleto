@@ -131,8 +131,17 @@ export default function FinanceGuideBot() {
   const [marketData, setMarketData] = useState(null)
   const [marketLoading, setMarketLoading] = useState(true)
   const shellRef = useRef(null)
+  const chatThreadRef = useRef(null)
 
   const financialStatus = useMemo(() => getUserFinancialStatus(), [isOpen])
+
+  useEffect(() => {
+    if (chatThreadRef.current) {
+      setTimeout(() => {
+        chatThreadRef.current.scrollTop = chatThreadRef.current.scrollHeight
+      }, 0)
+    }
+  }, [messages, isLoading])
 
   useEffect(() => {
     async function loadMarketData() {
@@ -203,7 +212,7 @@ export default function FinanceGuideBot() {
 
           <div className='guide-container'>
             <div className='guide-main'>
-              <div className='chat-thread'>
+              <div className='chat-thread' ref={chatThreadRef}>
                 {messages.map((msg) => (
                   <div key={msg.id} className={`message ${msg.sender}`}>
                     {msg.sender === 'bot' && <span className='bot-name'>{botName}:</span>}
@@ -213,7 +222,7 @@ export default function FinanceGuideBot() {
                 {isLoading && <div className='message bot'><p className='loading-text'>✨ Thinking...</p></div>}
               </div>
 
-              {!draft && (
+              {!draft && messages.length === 1 && (
                 <div className='quick-prompts'>
                   {quickPrompts.map((prompt, idx) => (
                     <button key={idx} className='quick-btn' onClick={() => handleQuickPrompt(prompt)}>
