@@ -56,7 +56,7 @@ function AuthPanel({ onAuthenticated }) {
   return (
     <main className="auth-shell">
       <section className="auth-panel">
-        <div className="logo logo-animated"><span className="logo-icon">$</span><span className="logo-text">Walleto</span></div>
+        <div className="logo logo-animated"><span className="logo-icon">💰</span><span className="logo-text">Walleto</span></div>
         <div className="auth-layout">
           <div className={`auth-character ${characterMood}`} aria-hidden="true">
             <div className="character-shadow" />
