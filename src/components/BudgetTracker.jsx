@@ -116,8 +116,22 @@ function BudgetTracker() {
 
   return (
     <div className="budget-tracker fade-in">
-      <h2> Budget Tracker</h2>
-      <p className="subtitle">Track your spending by category</p>
+      <div className="tracker-header">
+        <div>
+          <h2>Budget Tracker</h2>
+          <p className="subtitle">Track your spending by category</p>
+        </div>
+        <button
+          type="button"
+          className="currency-toggle-prominent"
+          onClick={() => setCurrency((current) => current === 'USD' ? 'KES' : 'USD')}
+          aria-label={`Switch currency to ${currency === 'USD' ? 'Kenyan shillings' : 'US dollars'}`}
+          title={`Click to switch to ${currency === 'USD' ? 'KES (Kenyan Shillings)' : 'USD (US Dollars)'}`}
+        >
+          <span className="currency-icon">{currency === 'USD' ? '💵' : '🇰🇪'}</span>
+          <span className="currency-text">{currency}</span>
+        </button>
+      </div>
 
       <div className="budget-summary">
         <div className="summary-card">
@@ -133,17 +147,7 @@ function BudgetTracker() {
           <p className={remaining < 0 ? 'negative' : ''}>{formatMoney(remaining)}</p>
         </div>
         <div className="summary-card">
-          <div className="summary-heading">
-            <h4> Money Used</h4>
-            <button
-              type="button"
-              className="currency-toggle"
-              onClick={() => setCurrency((current) => current === 'USD' ? 'KES' : 'USD')}
-              aria-label={`Switch currency to ${currency === 'USD' ? 'Kenyan shillings' : 'US dollars'}`}
-            >
-              {currency}
-            </button>
-          </div>
+          <h4> Money Used</h4>
           <p>{usedPercentage.toFixed(0)}%</p>
         </div>
       </div>

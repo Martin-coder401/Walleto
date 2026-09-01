@@ -194,6 +194,13 @@ export default function FinanceGuideBot() {
     setIsLoading(false)
   }
 
+  const handleClearSession = () => {
+    setMessages([
+      { id: 1, sender: 'bot', text: `Hi! I'm ${botName}. I help with budgeting, savings, cash flow, and smart money decisions. What's on your mind?` }
+    ])
+    setDraft('')
+  }
+
   return (
     <div className='finance-guide-shell' ref={shellRef}>
       {!isOpen && (
@@ -207,7 +214,10 @@ export default function FinanceGuideBot() {
         <div className='guide-window'>
           <div className='guide-header'>
             <h3>{botName} Finance Guide</h3>
-            <button className='guide-close' onClick={() => setIsOpen(false)}>✕</button>
+            <div className='guide-header-actions'>
+              <button className='guide-clear' onClick={handleClearSession} title='Clear chat history'>🔄</button>
+              <button className='guide-close' onClick={() => setIsOpen(false)}>✕</button>
+            </div>
           </div>
 
           <div className='guide-container'>

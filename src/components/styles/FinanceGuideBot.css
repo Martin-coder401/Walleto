@@ -76,6 +76,32 @@
   font-weight: 700;
 }
 
+.guide-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.guide-clear {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  color: #f4c95d;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+}
+
+.guide-clear:hover {
+  background: rgba(244, 201, 93, 0.15);
+  border-color: rgba(244, 201, 93, 0.3);
+  transform: rotate(180deg);
+}
+
 .guide-close {
   width: 32px;
   height: 32px;
