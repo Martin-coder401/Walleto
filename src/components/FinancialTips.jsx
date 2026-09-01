@@ -4,6 +4,7 @@ import './styles/FinancialTips.css'
 function FinancialTips() {
   const [todaysTipIndex, setTodaysTipIndex] = useState(0)
   const [todaysQuoteIndex, setTodaysQuoteIndex] = useState(0)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const allTips = [
     {
@@ -182,20 +183,31 @@ function FinancialTips() {
         </div>
       )}
 
-      <div className="tips-section">
-        <h3 className="section-title">Browse All Tips</h3>
-        <div className="tips-grid">
-          {allTips.map((tip) => (
-            <div key={tip.id} className={`tip-card ${tip.id === todaysTip?.id ? 'highlighted' : ''}`}>
-              <div className="tip-icon">{tip.icon}</div>
-              <div className="tip-content">
-                <h4>{tip.title}</h4>
-                <p>{tip.description}</p>
-                <span className="tip-category">{tip.category}</span>
+      <div className={`tips-section ${isExpanded ? 'expanded' : ''}`}>
+        <button 
+          className="section-toggle"
+          onClick={() => setIsExpanded(!isExpanded)}
+          aria-expanded={isExpanded}
+        >
+          <span className="section-title">Browse All Tips</span>
+          <svg className="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        {isExpanded && (
+          <div className="tips-grid">
+            {allTips.map((tip) => (
+              <div key={tip.id} className={`tip-card ${tip.id === todaysTip?.id ? 'highlighted' : ''}`}>
+                <div className="tip-icon">{tip.icon}</div>
+                <div className="tip-content">
+                  <h4>{tip.title}</h4>
+                  <p>{tip.description}</p>
+                  <span className="tip-category">{tip.category}</span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {todaysQuote && (
