@@ -20,6 +20,7 @@ function App() {
     window.localStorage.removeItem('walleto_budgets')
     window.localStorage.removeItem('walleto_transactions')
     window.localStorage.removeItem('walleto_user')
+    window.localStorage.removeItem('walleto_remember_me')
     // Reset state
     setAuthenticated(false)
     setUser(null)

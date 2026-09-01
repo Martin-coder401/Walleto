@@ -1,13 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { apiRequest } from '../api/apiClient'
 
 function AuthPanel({ onAuthenticated }) {
   const [mode, setMode] = useState('login')
   const [form, setForm] = useState({ email: '', password: '' })
+  const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [passwordFocused, setPasswordFocused] = useState(false)
   const [formFocused, setFormFocused] = useState(false)
+
+  useEffect(() => {
+    const stored = localStorage.getItem('walleto_remember_me')
+    if (stored) {
+      try {
+        const { email, password } = JSON.parse(stored)
+        setForm({ email, password })
+        setRememberMe(true)
+      } catch {
+        localStorage.removeItem('walleto_remember_me')
+      }
+    }
+  }, [])
 
   const characterMood = error ? 'angry' : passwordFocused ? 'looking-away' : formFocused ? 'excited' : 'pointing'
 
@@ -17,6 +31,13 @@ function AuthPanel({ onAuthenticated }) {
     setError('')
     try {
       const account = await apiRequest(`/auth/${mode}`, { method: 'POST', body: JSON.stringify(form) })
+      
+      if (rememberMe) {
+        localStorage.setItem('walleto_remember_me', JSON.stringify({ email: form.email, password: form.password }))
+      } else {
+        localStorage.removeItem('walleto_remember_me')
+      }
+      
       onAuthenticated(account)
     } catch (requestError) {
       setError(requestError.message)
@@ -75,6 +96,16 @@ function AuthPanel({ onAuthenticated }) {
                   required 
                   className="auth-input"
                 />
+              </div>
+              <div className="remember-me-group">
+                <input 
+                  type="checkbox" 
+                  id="remember-me" 
+                  checked={rememberMe} 
+                  onChange={(event) => setRememberMe(event.target.checked)}
+                  className="remember-checkbox"
+                />
+                <label htmlFor="remember-me" className="remember-label">Remember me</label>
               </div>
               {error && <p className="form-error error-animate">{error}</p>}
               <button className="primary-btn btn-animate" disabled={loading}>
