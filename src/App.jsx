@@ -40,7 +40,7 @@ function App() {
         <div className="header-content">
           <div className="logo-block">
             <div className="logo">
-              <span className="logo-icon">�</span>
+              <span className="logo-icon">💰</span>
               <span className="logo-text">Walleto</span>
             </div>
             <span className="mini-badge">Finance + market insight</span>
