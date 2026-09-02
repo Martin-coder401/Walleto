@@ -12,4 +12,4 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: FRONTEND_ORIGIN
-        value: https://walleto-opal.vercel.app
+        value: https://walleto.vercel.app,https://walleto-opal.vercel.app
