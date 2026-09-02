@@ -2,6 +2,7 @@
 
 Walleto is a full-stack personal finance workspace built with React and Flask. Users can open the app directly, manage budget categories, track spending, convert amounts to Kenyan shillings, and view live market information without logging in.
 https://walleto-opal.vercel.app/
+walleto video link recording https://www.loom.com/share/6b438abad1d44b44a080407ca7ba9b6a
 
 The frontend uses `VITE_API_URL` for the deployed Flask API. The production deployment uses Vercel for the frontend, Render for the Flask backend, and PostgreSQL for persistent budget data.
 
